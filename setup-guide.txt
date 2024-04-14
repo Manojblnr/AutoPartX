@@ -1,0 +1,90 @@
+
+#           Steps to setup the server and connection of sqlite3 data base
+
+1.  Create server folder and inside three folders for app, migrations, database.
+
+2.  For using the ruby on roda server download & install ruby with dev kit
+    link: https://rubyinstaller.org/downloads/
+    currently installed version is : ruby 3.2.3
+    command to install : gem install bundler   
+
+3. Create a Gemfile with necessary dependencies, and do bundle install for Gemfile.lock
+    ruby offers the bundler it will allow to bundle the Gemfile.
+
+4.  steps to run the server 
+        1. After gem install if try to run the server inside the server/app directory:
+            bundle exec puma    
+                You will see : ERROR: No application configured, nothing to run
+                    For that configure the app
+
+        2. create config.ru file inside the server/app/ and add the code to 
+                1.Sets up environment variables and loads required gems.
+                2.Configures the application settings and includes route definitions.
+                3.Constructs a Rack middleware stack with CORS handling and optional auto-reloading, then runs the Roda application.
+
+        3. Now if try to run the server inside app folder you will get ERROR    
+            cannot load such file : .env.rb
+                For that    
+                    1. create file called .env.rb in the root directory.
+
+                Now you see error: cannot load such file : routes
+                    1. create routes.rb file inside app folder and add the 
+                    2. Add the code for this operations:
+                        1. Sets up environment variables and loads required gems.
+                        2. Requires necessary files (defaults.rb, models.rb) containing application logic.
+                        3. Defines a Roda application (App) with plugins for rendering and JSON handling.
+                        4. Defines routes for handling requests, including parsing JSON data from the request body.
+                        5. Prints a message when the root route is accessed.
+                
+                Now you see error: cannot load such file : defaults
+                    1. create defaults.rb file inside app folder and add the 
+                    2. Add the code for this operations:
+                        1. Sets up a Roda application (App) with plugins for indifferent parameters 
+                            handling and JSON response formatting.
+                        2. Defines a method (indifferent_data) to recursively convert incoming data 
+                            into a format where keys can be accessed as symbols or strings interchangeably.
+                        3. Defines a module (Util) containing a method (getUniqueName) to generate a 
+                            unique name based on the current timestamp and a random number.
+
+                Now you see error: cannot load such file : models
+                    1. create models.rb file inside app folder and add the 
+                    2. Add the code for this operations:    
+                        1. Requires the Sequel and BCrypt gems for database operations and password hashing, 
+                            respectively.
+                        2.  Sets up the database connection using a SQLite file (reactRubyonRoda.sqlite).
+                        3.  Configures Sequel to automatically manage timestamps for model records.
+                        4.  Defines a User model class representing a table in the database.
+                        5.  Implements a register class method in the User model to handle user registration:
+                        6.  Validates that required user attributes (username, email, mobile number) are provided.
+                        7.  Searches for an existing user with the provided username.
+                        8.  Creates or updates a user record with the provided data, including hashing the password for security.
+                        9.  Returns the user object.
+
+                    If you run again you see: Sequel::DatabaseError: SQLite3::SQLException: no such table: users
+
+                before running the server again follow the step 5 for migration files, sqlite database and user table creation.
+
+                    
+
+5. Create a rakefile.rb for migration from migrations files to database
+        1. Add the code for this operations:
+            1.  Loads required dependencies such as YAML and Shellwords.
+            2.  Sets up the database connection using SQLite.
+            3.  Defines a Rake task for migrating the database using Sequel migrations:
+            4.  Allows migration to the latest version or a specific version specified as an argument.
+            5.  Uses Sequel's Migrator to execute migrations stored in the server/migrations directory.
+            6.  Prints messages indicating the migration process.
+
+        2. Create a migration file example 
+            1. create a 01_create_users.rb file inside the migrations folder
+
+        3. Create a sqlite database and users table 
+            run command inside server/app folder    
+                rake db:migrate    
+            note: use SQLite Viewer extension to see the database table in vscode
+
+
+6. Now run the server inside server/app use the command: bundle exec puma
+    1. Now server will get start in localhost:9292
+    2. To see the root route puts message open the above port in browser, message will shown in 
+        server terminal.
