@@ -1,5 +1,6 @@
 
 # This is for routes and it will execute the models funtions
+# routes.rb 
 
 begin
 	require_relative '../../.env.rb'
